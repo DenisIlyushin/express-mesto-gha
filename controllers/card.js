@@ -54,9 +54,6 @@ module.exports.getCard = (req, res) => {
 
 module.exports.handleLike = (req, res) => {
   const cardId = req.params.id
-  if (!checkIdValidity(cardId, res)) {
-    return
-  }
   // проверка типа запроса для определения действия лайка
   let action
   switch (req.method) {
