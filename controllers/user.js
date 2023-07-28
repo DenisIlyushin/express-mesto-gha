@@ -3,7 +3,7 @@ const {
   StatusCodes
 } = require('http-status-codes');
 const mongoose = require('mongoose');
-const itemNotFound = require('../errors/errors.js');
+const itemNotFound = require('../errors/errors');
 
 module.exports.createUser = (req, res) => {
   User.create(req.body)
@@ -52,12 +52,24 @@ module.exports.getUser = (req, res) => {
         .status(StatusCodes.OK)
         .send(user)
     })
+    .orFail(() => {
+      throw itemNotFound(
+        `Пользователь с ID ${userId} не найден`,
+      )
+    })
     .catch((error) => {
       if (error instanceof mongoose.Error.CastError) {
         res
-          .status(StatusCodes.NOT_FOUND)
+          .status(StatusCodes.BAD_REQUEST)
           .send({
             message: `Пользователь с ID ${userId} не найден`,
+            details: error.message ? error.message : ''
+          })
+      } else if (error instanceof itemNotFound) {
+        res
+          .status(StatusCodes.NOT_FOUND)
+          .send({
+            message: `Пользователь не найден.`,
             details: error.message ? error.message : ''
           })
       } else {
