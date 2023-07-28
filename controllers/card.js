@@ -4,6 +4,7 @@ const {
 } = require('http-status-codes');
 const mongoose = require('mongoose');
 const itemNotFound = require('../errors/errors.js');
+const {checkIdValidity} = require('../utils/checkIdValidity');
 
 module.exports.createCard = (req, res) => {
   Card.create({
@@ -49,6 +50,9 @@ module.exports.getAllCards = (req, res) => {
 
 module.exports.getCard = (req, res) => {
   const cardId = req.params.id
+  if (!checkIdValidity(cardId, res)) {
+    return
+  }
   Card.findById(cardId)
     .then((user) => {
       res
@@ -74,6 +78,10 @@ module.exports.getCard = (req, res) => {
 }
 
 module.exports.handleLike = (req, res) => {
+  const cardId = req.params.id
+  if (!checkIdValidity(cardId, res)) {
+    return
+  }
   // проверка типа запроса для определения действия лайка
   let action = ''
   switch (req.method) {
@@ -84,18 +92,17 @@ module.exports.handleLike = (req, res) => {
       action = '$pull';
       break
   }
-
   Card.findByIdAndUpdate(
-    req.params.id,
+    cardId,
     {[action]: {likes: req.user._id}},
     {new: true},
   )
-    .orFail(() => {
-      throw new itemNotFound(
-        `Информацию о карточке места невозможно обновить.
-       Карточка не найдена`
-      )
-    })
+    // .orFail(() => {
+    //   throw new itemNotFound(
+    //     `Информацию о карточке места невозможно обновить.
+    //    Карточка не найдена`
+    //   )
+    // })
     .populate([{path: 'likes', model: 'user'}])
     .then((user) => {
       res
@@ -103,11 +110,12 @@ module.exports.handleLike = (req, res) => {
         .send(user)
     })
     .catch((error) => {
+      console.log(error)
       if (error instanceof mongoose.Error.CastError) {
         res
           .status(StatusCodes.NOT_FOUND)
           .send({
-            message: `Карточка не найдена.`,
+            message: `Карточка c ID ${cardId}не найдена.`,
             details: error.message ? error.message : ''
           })
       } else {
