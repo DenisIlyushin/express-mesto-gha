@@ -2,8 +2,7 @@ const User = require('../models/user');
 const {
   StatusCodes
 } = require('http-status-codes');
-const mongoose = require('mongoose');
-const itemNotFound = require('../errors/errors');
+const {handleError} = require('../utils/checkIdValidity.js');
 
 module.exports.createUser = (req, res) => {
   User.create(req.body)
@@ -13,20 +12,9 @@ module.exports.createUser = (req, res) => {
         .send(user)
     })
     .catch((error) => {
-      if (error instanceof mongoose.Error.ValidationError) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({
-            message: `Не удалось создать пользователя. Данные не валидны`,
-            details: error.message ? error.message : ''
-          })
-      } else {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send({
-            message: error.message ? error.message : 'Непредвиденная ошибка сервера'
-          })
-      }
+      handleError(error, res, {
+        invalidRequestMessage: `Не удалось создать пользователя. Данные не валидны`,
+      })
     })
 };
 
@@ -36,43 +24,24 @@ module.exports.getAllUsers = (req, res) => {
       res.status(StatusCodes.OK).send(result)
     })
     .catch((error) => {
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({
-          message: error.message ? error.message : 'Непредвиденная ошибка сервера'
-        })
+      handleError(error, res)
     })
 };
 
 module.exports.getUser = (req, res) => {
   const userId = req.params.id
   User.findById(userId)
+    .orFail(() => {})
     .then((user) => {
       res
         .status(StatusCodes.OK)
         .send(user)
     })
-    // .orFail(() => {
-    //   throw new itemNotFound(
-    //     `Пользователь с ID ${userId} не найден`,
-    //   )
-    // })
     .catch((error) => {
-      // console.log(error)
-      if (error instanceof mongoose.Error.CastError) {
-        res
-          .status(StatusCodes.NOT_FOUND)
-          .send({
-            message: `Пользователь с ID ${userId} не найден`,
-            details: error.message ? error.message : ''
-          })
-      } else {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({
-            message: `ID ${id} не валиден`,
-          })
-      }
+      handleError(error, res, {
+        notFoundMessage: `Пользователь с ID ${userId} не найден`,
+        badRequestMessage: `Пользователь с ID ${userId} не валиден`,
+      })
     })
 };
 
@@ -95,38 +64,16 @@ module.exports.updateUser = (req, res) => {
     runValidators: true,
     upsert: false
   })
-    .orFail(() => {
-      throw new itemNotFound(
-        `Информацию о пользователе с ID ${userId} невозможно обновить.
-        Пользователь не найден`
-      )
-    })
+    .orFail(() => {})
     .then((user) => {
       res
         .status(StatusCodes.OK)
         .send(user)
     })
     .catch((error) => {
-      if (error instanceof mongoose.Error.CastError) {
-        res
-          .status(StatusCodes.NOT_FOUND)
-          .send({
-            message: `Пользователь с ID ${userId} не найден`,
-            details: error.message ? error.message : ''
-          })
-      } else if (error instanceof itemNotFound) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({
-            message: `Не удалось обновить информацию пользователя. Данные не валидны`,
-            details: error.message ? error.message : ''
-          })
-      } else {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send({
-            message: error.message ? error.message : 'Непредвиденная ошибка сервера'
-          })
-      }
+      handleError(error, res, {
+        notFoundMessage: `Пользователь с ID ${userId} не найден`,
+        badRequestMessage: `Пользователь с ID ${userId} не валиден`,
+      })
     })
 };

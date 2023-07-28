@@ -1,14 +1,45 @@
 const mongoose = require('mongoose');
 const {StatusCodes} = require('http-status-codes');
 
-module.exports.checkIdValidity = (id, response) => {
-  if (!mongoose.isValidObjectId(id)) {
-    response
+module.exports.handleError = (
+  error,
+  res,
+  config = {
+    notFoundMessage: 'Объект не найден',
+    badRequestMessage: 'ID объекта не валидный',
+    invalidRequestMessage: 'Переданные данные не валидны',
+    defaultMessage: 'Непредвиденная ошибка сервера'
+  }
+) => {
+  console.log('handleError', error.name, error)
+  if (error instanceof mongoose.Error.DocumentNotFoundError) {
+    res
+      .status(StatusCodes.NOT_FOUND)
+      .send({
+        message: config.notFoundMessage,
+        details: error.message ? error.message : ''
+      })
+  } else if (error instanceof mongoose.Error.CastError) {
+    console.log('here')
+    res
       .status(StatusCodes.BAD_REQUEST)
       .send({
-        message: `ID ${id} не валиден`,
+        message: config.badRequestMessage,
+        details: error.message ? error.message : ''
       })
-    return false
+  } else if (error instanceof mongoose.Error.ValidationError) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .send({
+          message: `Не удалось создать пользователя. Данные не валидны`,
+          details: error.message ? error.message : ''
+        })
+  } else {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send({
+        message: config.defaultMessage,
+        details: error.message ? error.message : ''
+      })
   }
-  return true
 }
