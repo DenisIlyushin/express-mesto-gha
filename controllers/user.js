@@ -47,7 +47,7 @@ module.exports.getUser = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   const userId = req.user._id
-  let userInfo = {}
+  let userInfo
 
   // проверка обновляемых параметров по пути запроса
   if (req.path.includes('avatar')) {
