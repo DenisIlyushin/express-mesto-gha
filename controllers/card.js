@@ -3,7 +3,6 @@ const {
   StatusCodes
 } = require('http-status-codes');
 const mongoose = require('mongoose');
-const itemNotFound = require('../errors/errors.js');
 const {checkIdValidity} = require('../utils/checkIdValidity');
 
 module.exports.createCard = (req, res) => {
