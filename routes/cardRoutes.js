@@ -3,8 +3,7 @@ const {
   getAllCards,
   getCard,
   handleLike
-}
-  = require('../controllers/card.js');
+} = require('../controllers/card.js');
 const cardRouter = require('express').Router();
 
 const {

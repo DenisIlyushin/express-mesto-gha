@@ -76,7 +76,7 @@ module.exports.updateUser = (req, res) => {
 
   // проверка обновляемых параметров по пути запроса
   if (req.path.includes('avatar')) {
-    userInfo = { avatar: req.body.avatar }
+    userInfo = {avatar: req.body.avatar}
   } else {
     userInfo = {
       name: req.body.name,
@@ -92,7 +92,7 @@ module.exports.updateUser = (req, res) => {
     .orFail(() => {
       throw itemNotFound(
         `Информацию о пользователе с ID ${userId} невозможно обновить.
-         Пользователь не найден`
+        Пользователь не найден`
       )
     })
     .then((user) => {

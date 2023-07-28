@@ -75,6 +75,7 @@ module.exports.getCard = (req, res) => {
 }
 
 module.exports.handleLike = (req, res) => {
+  // проверка типа запроса для определения действия лайка
   let action = ''
   switch (req.method) {
     case 'PUT':
@@ -87,16 +88,16 @@ module.exports.handleLike = (req, res) => {
 
   Card.findByIdAndUpdate(
     req.params.id,
-    { [action]: { likes: req.user._id } },
-    { new: true },
+    {[action]: {likes: req.user._id}},
+    {new: true},
   )
     .orFail(() => {
-    throw itemNotFound(
-      `Информацию о карточке места невозможно обновить.
+      throw itemNotFound(
+        `Информацию о карточке места невозможно обновить.
        Карточка не найдена`
-    )
-  })
-    .populate([{ path: 'likes', model: 'user' }])
+      )
+    })
+    .populate([{path: 'likes', model: 'user'}])
     .then((user) => {
       res
         .status(StatusCodes.OK)
