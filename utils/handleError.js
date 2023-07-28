@@ -11,7 +11,6 @@ module.exports.handleError = (
     defaultMessage: 'Непредвиденная ошибка сервера'
   }
 ) => {
-  console.log('handleError', error.name, error)
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
     res
       .status(StatusCodes.NOT_FOUND)
@@ -20,7 +19,6 @@ module.exports.handleError = (
         details: error.message ? error.message : ''
       })
   } else if (error instanceof mongoose.Error.CastError) {
-    console.log('here')
     res
       .status(StatusCodes.BAD_REQUEST)
       .send({
