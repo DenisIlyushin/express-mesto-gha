@@ -52,11 +52,11 @@ module.exports.getUser = (req, res) => {
         .status(StatusCodes.OK)
         .send(user)
     })
-    .orFail(() => {
-      throw itemNotFound(
-        `Пользователь с ID ${userId} не найден`,
-      )
-    })
+    // .orFail(() => {
+    //   throw itemNotFound(
+    //     `Пользователь с ID ${userId} не найден`,
+    //   )
+    // })
     .catch((error) => {
       if (error instanceof mongoose.Error.CastError) {
         res
