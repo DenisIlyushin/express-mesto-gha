@@ -92,7 +92,7 @@ module.exports.deleteCard = (req, res) => {
     .catch((error) => {
       handleError(error, res, {
         notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
-        badRequestMessage: `Карточка места с с ID ${userId} не валиденa`,
+        badRequestMessage: `Карточка места с с ID ${cardId} не валиденa`,
       })
     })
 }
