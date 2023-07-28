@@ -4,6 +4,7 @@ const {
 } = require('http-status-codes');
 const mongoose = require('mongoose');
 const {checkIdValidity} = require('../utils/checkIdValidity');
+const {handleError} = require('../utils/checkIdValidity.js');
 
 module.exports.createCard = (req, res) => {
   Card.create({
@@ -16,20 +17,9 @@ module.exports.createCard = (req, res) => {
         .send(user)
     })
     .catch((error) => {
-      if (error instanceof mongoose.Error.ValidationError) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({
-            message: `Не удалось создать карточку места. Данные не валидны`,
-            details: error.message ? error.message : ''
-          })
-      } else {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send({
-            message: error.message ? error.message : 'Непредвиденная ошибка сервера'
-          })
-      }
+      handleError(error, res, {
+        invalidRequestMessage: `Не удалось создать карточку места. Данные не валидны`,
+      })
     })
 }
 
@@ -39,11 +29,7 @@ module.exports.getAllCards = (req, res) => {
       res.status(StatusCodes.OK).send(result)
     })
     .catch((error) => {
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({
-          message: error.message ? error.message : 'Непредвиденная ошибка сервера'
-        })
+      handleError(error, res)
     })
 }
 
@@ -53,26 +39,17 @@ module.exports.getCard = (req, res) => {
     return
   }
   Card.findById(cardId)
+    .orFail(() => {})
     .then((user) => {
       res
         .status(StatusCodes.OK)
         .send(user)
     })
     .catch((error) => {
-      if (error instanceof mongoose.Error.CastError) {
-        res
-          .status(StatusCodes.NOT_FOUND)
-          .send({
-            message: `Карточка места с ID ${cardId} не найдена`,
-            details: error.message ? error.message : ''
-          })
-      } else {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send({
-            message: error.message ? error.message : 'Непредвиденная ошибка сервера'
-          })
-      }
+      handleError(error, res, {
+        notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
+        badRequestMessage: `Карточка места с с ID ${userId} не валиденa`,
+      })
     })
 }
 
@@ -82,7 +59,7 @@ module.exports.handleLike = (req, res) => {
     return
   }
   // проверка типа запроса для определения действия лайка
-  let action = ''
+  let action
   switch (req.method) {
     case 'PUT':
       action = '$addToSet';
@@ -96,12 +73,7 @@ module.exports.handleLike = (req, res) => {
     {[action]: {likes: req.user._id}},
     {new: true},
   )
-    // .orFail(() => {
-    //   throw new itemNotFound(
-    //     `Информацию о карточке места невозможно обновить.
-    //    Карточка не найдена`
-    //   )
-    // })
+    .orFail(() => {})
     .populate([{path: 'likes', model: 'user'}])
     .then((user) => {
       res
@@ -109,20 +81,9 @@ module.exports.handleLike = (req, res) => {
         .send(user)
     })
     .catch((error) => {
-      console.log(error)
-      if (error instanceof mongoose.Error.CastError) {
-        res
-          .status(StatusCodes.NOT_FOUND)
-          .send({
-            message: `Карточка c ID ${cardId}не найдена.`,
-            details: error.message ? error.message : ''
-          })
-      } else {
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send({
-            message: error.message ? error.message : 'Непредвиденная ошибка сервера'
-          })
-      }
+      handleError(error, res, {
+        notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
+        badRequestMessage: `Карточка места с с ID ${userId} не валиденa`,
+      })
     })
 }
