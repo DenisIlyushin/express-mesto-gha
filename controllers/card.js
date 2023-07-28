@@ -56,7 +56,6 @@ module.exports.getCard = (req, res) => {
         .send(user)
     })
     .catch((error) => {
-      console.log(error)
       if (error instanceof mongoose.Error.CastError) {
         res
           .status(StatusCodes.NOT_FOUND)
@@ -92,7 +91,7 @@ module.exports.handleLike = (req, res) => {
     {new: true},
   )
     .orFail(() => {
-      throw itemNotFound(
+      throw new itemNotFound(
         `Информацию о карточке места невозможно обновить.
        Карточка не найдена`
       )
@@ -104,7 +103,6 @@ module.exports.handleLike = (req, res) => {
         .send(user)
     })
     .catch((error) => {
-      console.log(error)
       if (error instanceof mongoose.Error.CastError) {
         res
           .status(StatusCodes.NOT_FOUND)

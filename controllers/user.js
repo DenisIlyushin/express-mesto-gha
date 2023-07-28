@@ -53,23 +53,17 @@ module.exports.getUser = (req, res) => {
         .send(user)
     })
     // .orFail(() => {
-    //   throw itemNotFound(
+    //   throw new itemNotFound(
     //     `Пользователь с ID ${userId} не найден`,
     //   )
     // })
     .catch((error) => {
+      console.log(error)
       if (error instanceof mongoose.Error.CastError) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({
-            message: `Пользователь с ID ${userId} не найден`,
-            details: error.message ? error.message : ''
-          })
-      } else if (error instanceof itemNotFound) {
         res
           .status(StatusCodes.NOT_FOUND)
           .send({
-            message: `Пользователь не найден.`,
+            message: `Пользователь с ID ${userId} не найден`,
             details: error.message ? error.message : ''
           })
       } else {
@@ -102,7 +96,7 @@ module.exports.updateUser = (req, res) => {
     upsert: false
   })
     .orFail(() => {
-      throw itemNotFound(
+      throw new itemNotFound(
         `Информацию о пользователе с ID ${userId} невозможно обновить.
         Пользователь не найден`
       )
