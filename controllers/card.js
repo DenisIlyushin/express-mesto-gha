@@ -2,8 +2,7 @@ const Card = require('../models/card');
 const {
   StatusCodes
 } = require('http-status-codes');
-const {checkIdValidity} = require('../utils/checkIdValidity');
-const {handleError} = require('../utils/checkIdValidity.js');
+const {handleError} = require('../utils/handleError.js');
 
 module.exports.createCard = (req, res) => {
   Card.create({
@@ -34,9 +33,6 @@ module.exports.getAllCards = (req, res) => {
 
 module.exports.getCard = (req, res) => {
   const cardId = req.params.id
-  if (!checkIdValidity(cardId, res)) {
-    return
-  }
   Card.findById(cardId)
     .orFail(() => {})
     .then((user) => {
