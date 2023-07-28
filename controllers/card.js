@@ -79,3 +79,20 @@ module.exports.handleLike = (req, res) => {
       })
     })
 }
+
+module.exports.deleteCard = (req, res) => {
+  const cardId = req.params.id
+  Card.findByIdAndRemove(cardId)
+    .orFail(() => {})
+    .then((user) => {
+      res
+        .status(StatusCodes.OK)
+        .send(user)
+    })
+    .catch((error) => {
+      handleError(error, res, {
+        notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
+        badRequestMessage: `Карточка места с с ID ${userId} не валиденa`,
+      })
+    })
+}

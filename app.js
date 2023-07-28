@@ -32,13 +32,13 @@ app.use((req, res, next) => {
 // routers
 app.use('/', userRouter);
 app.use('/', cardRouter);
-// app.use('*', (req, res) => {
-//   res
-//     .status(StatusCodes.NOT_FOUND)
-//     .send({
-//       message: 'URI не найден.'
-//     })
-// })
+app.use('*', (req, res) => {
+  res
+    .status(StatusCodes.NOT_FOUND)
+    .send({
+      message: 'URI не найден.'
+    })
+})
 
 app.listen(PORT, () => {
   console.log('Ссылка на сервер');
