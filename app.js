@@ -34,6 +34,7 @@ app.use((req, res, next) => {
 app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', (req, res) => {
+  console.log(req.path)
   res
     .status(StatusCodes.NOT_FOUND)
     .send({
