@@ -4,7 +4,6 @@ const {
 } = require('http-status-codes');
 const mongoose = require('mongoose');
 const itemNotFound = require('../errors/errors');
-const {checkIdValidity} = require('../utils/checkIdValidity');
 
 module.exports.createUser = (req, res) => {
   User.create(req.body)
@@ -47,17 +46,19 @@ module.exports.getAllUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   const userId = req.params.id
-  if (!checkIdValidity(userId, res)) {
-    return
-  }
   User.findById(userId)
     .then((user) => {
       res
         .status(StatusCodes.OK)
         .send(user)
     })
+    // .orFail(() => {
+    //   throw new itemNotFound(
+    //     `Пользователь с ID ${userId} не найден`,
+    //   )
+    // })
     .catch((error) => {
-      console.log(error)
+      // console.log(error)
       if (error instanceof mongoose.Error.CastError) {
         res
           .status(StatusCodes.NOT_FOUND)
@@ -67,9 +68,9 @@ module.exports.getUser = (req, res) => {
           })
       } else {
         res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .status(StatusCodes.BAD_REQUEST)
           .send({
-            message: error.message ? error.message : 'Непредвиденная ошибка сервера'
+            message: `ID ${id} не валиден`,
           })
       }
     })
@@ -77,9 +78,6 @@ module.exports.getUser = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   const userId = req.user._id
-  if (!checkIdValidity(userId, res)) {
-    return
-  }
   let userInfo = {}
 
   // проверка обновляемых параметров по пути запроса
