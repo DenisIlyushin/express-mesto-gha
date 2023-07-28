@@ -1,12 +1,20 @@
 const {
   createCard,
   getAllCards,
-  getCard}
+  getCard,
+  handleLike
+}
   = require('../controllers/card.js');
 const cardRouter = require('express').Router();
 
-cardRouter.post('/cards', createCard);
-cardRouter.get('/cards', getAllCards);
-cardRouter.get('/cards/:id', getCard);
+const {
+  CARD_PATH = '/cards',
+} = process.env;
+
+cardRouter.post(`${CARD_PATH}`, createCard);
+cardRouter.get(`${CARD_PATH}`, getAllCards);
+cardRouter.get(`${CARD_PATH}/:id`, getCard);
+cardRouter.put(`${CARD_PATH}/:id/likes`, handleLike)
+cardRouter.delete(`${CARD_PATH}/:id/likes`, handleLike)
 
 module.exports = cardRouter
