@@ -12,7 +12,6 @@ module.exports.createUser = (req, res) => {
         .send(user)
     })
     .catch((error) => {
-      console.log(error)
       if (error instanceof mongoose.Error.ValidationError) {
         res
           .status(StatusCodes.BAD_REQUEST)
@@ -53,9 +52,10 @@ module.exports.getUser = (req, res) => {
         .send(user)
     })
     .catch((error) => {
+      console.log(error)
       if (error instanceof mongoose.Error.CastError) {
         res
-          .status(StatusCodes.BAD_REQUEST)
+          .status(StatusCodes.NOT_FOUND)
           .send({
             message: `Пользователь с ID ${userId} не найден`,
             details: error.message ? error.message : ''
