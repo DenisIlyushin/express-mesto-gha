@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
-const {StatusCodes} = require('http-status-codes');
+
+const {
+  StatusCodes
+} = require('http-status-codes');
 
 module.exports.handleError = (
   error,
   res,
   config = {
-    notFoundMessage: 'Объект не найден',
-    badRequestMessage: 'ID объекта не валидный',
-    invalidRequestMessage: 'Переданные данные не валидны',
-    defaultMessage: 'Непредвиденная ошибка сервера'
+    notFoundMessage: `Объект не найден`,
+    badRequestMessage: `ID объекта не валидный`,
+    invalidRequestMessage: `Переданные данные не валидны`,
+    defaultMessage: `Непредвиденная ошибка сервера`
   }
 ) => {
   if (error instanceof mongoose.Error.DocumentNotFoundError) {

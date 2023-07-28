@@ -1,10 +1,12 @@
+const userRouter = require('express').Router();
+
 const {
   createUser,
   getAllUsers,
   getUser,
   updateUser
 } = require('../controllers/user.js');
-const userRouter = require('express').Router();
+
 
 const {
   USER_PATH = '/users',

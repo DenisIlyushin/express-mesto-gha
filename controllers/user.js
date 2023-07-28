@@ -1,7 +1,8 @@
-const User = require('../models/user');
 const {
   StatusCodes
 } = require('http-status-codes');
+
+const User = require('../models/user');
 const {handleError} = require('../utils/handleError.js');
 
 module.exports.createUser = (req, res) => {
