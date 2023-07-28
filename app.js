@@ -7,7 +7,7 @@ const userRouter = require('./routes/userRoutes');
 const {
   PORT = 3000,
   BASE_PATH = 'http://localhost',
-  MONGODB_URL =  'mongodb://localhost:27017/mestodb '
+  MONGODB_URL = 'mongodb://localhost:27017/mestodb '
 } = process.env;
 
 mongoose.connect(MONGODB_URL, {
