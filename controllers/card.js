@@ -34,7 +34,8 @@ module.exports.getAllCards = (req, res) => {
 module.exports.getCard = (req, res) => {
   const cardId = req.params.id
   Card.findById(cardId)
-    .orFail(() => {})
+    .orFail(() => {
+    })
     .then((user) => {
       res
         .status(StatusCodes.OK)
@@ -65,7 +66,8 @@ module.exports.handleLike = (req, res) => {
     {[action]: {likes: req.user._id}},
     {new: true},
   )
-    .orFail(() => {})
+    .orFail(() => {
+    })
     .populate([{path: 'likes', model: 'user'}])
     .then((user) => {
       res
@@ -83,7 +85,8 @@ module.exports.handleLike = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   const cardId = req.params.id
   Card.findByIdAndRemove(cardId)
-    .orFail(() => {})
+    .orFail(() => {
+    })
     .then((user) => {
       res
         .status(StatusCodes.OK)

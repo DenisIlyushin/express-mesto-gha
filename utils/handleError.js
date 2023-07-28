@@ -26,12 +26,12 @@ module.exports.handleError = (
         details: error.message ? error.message : ''
       })
   } else if (error instanceof mongoose.Error.ValidationError) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .send({
-          message: `Не удалось создать пользователя. Данные не валидны`,
-          details: error.message ? error.message : ''
-        })
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({
+        message: config.invalidRequestMessage,
+        details: error.message ? error.message : ''
+      })
   } else {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

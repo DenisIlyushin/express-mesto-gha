@@ -17,4 +17,5 @@ cardRouter.get(`${CARD_PATH}/:id`, getCard);
 cardRouter.put(`${CARD_PATH}/:id/likes`, handleLike)
 cardRouter.delete(`${CARD_PATH}/:id/likes`, handleLike)
 cardRouter.delete(`${CARD_PATH}/:id`, deleteCard);
+
 module.exports = cardRouter
