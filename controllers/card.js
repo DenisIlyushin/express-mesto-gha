@@ -2,7 +2,6 @@ const Card = require('../models/card');
 const {
   StatusCodes
 } = require('http-status-codes');
-const mongoose = require('mongoose');
 const {checkIdValidity} = require('../utils/checkIdValidity');
 const {handleError} = require('../utils/checkIdValidity.js');
 
