@@ -15,40 +15,40 @@ module.exports.handleError = (
   },
 ) => {
   // восстанавливает необходимую структуру объекта config
-  config = {
+  const restoredConfig = {
     ...config,
     notFoundMessage: config.notFoundMessage || 'Объект не найден',
     badRequestMessage: config.badRequestMessage || 'ID объекта не валидный',
     invalidRequestMessage: config.invalidRequestMessage || 'Переданные данные не валидны',
     defaultMessage: config.defaultMessage || 'Непредвиденная ошибка сервера',
-  }
+  };
 
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
     res
       .status(StatusCodes.NOT_FOUND)
       .send({
-        message: config.notFoundMessage,
+        message: restoredConfig.notFoundMessage,
         details: error.message ? error.message : '',
       });
   } else if (error instanceof mongoose.Error.CastError) {
     res
       .status(StatusCodes.BAD_REQUEST)
       .send({
-        message: config.badRequestMessage,
+        message: restoredConfig.badRequestMessage,
         details: error.message ? error.message : '',
       });
   } else if (error instanceof mongoose.Error.ValidationError) {
     res
       .status(StatusCodes.BAD_REQUEST)
       .send({
-        message: config.invalidRequestMessage,
+        message: restoredConfig.invalidRequestMessage,
         details: error.message ? error.message : '',
       });
   } else {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send({
-        message: config.defaultMessage,
+        message: restoredConfig.defaultMessage,
         details: error.message ? error.message : '',
       });
   }
