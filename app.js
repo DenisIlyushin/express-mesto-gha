@@ -1,4 +1,3 @@
-const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -20,8 +19,6 @@ mongoose.connect(MONGODB_URL, {
 const app = express();
 
 // middlewares
-
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
   req.user = {
@@ -31,7 +28,6 @@ app.use((req, res, next) => {
 });
 
 // routers
-
 app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', (req, res) => {
