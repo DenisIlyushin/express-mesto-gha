@@ -8,12 +8,21 @@ module.exports.handleError = (
   error,
   res,
   config = {
-    notFoundMessage: 'Объект не найден',
-    badRequestMessage: 'ID объекта не валидный',
-    invalidRequestMessage: 'Переданные данные не валидны',
-    defaultMessage: 'Непредвиденная ошибка сервера',
+    notFoundMessage: '',
+    badRequestMessage: '',
+    invalidRequestMessage: '',
+    defaultMessage: '',
   },
 ) => {
+  // восстанавливает необходимую структуру объекта config
+  config = {
+    ...config,
+    notFoundMessage: config.notFoundMessage || 'Объект не найден',
+    badRequestMessage: config.badRequestMessage || 'ID объекта не валидный',
+    invalidRequestMessage: config.invalidRequestMessage || 'Переданные данные не валидны',
+    defaultMessage: config.defaultMessage || 'Непредвиденная ошибка сервера',
+  }
+
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
     res
       .status(StatusCodes.NOT_FOUND)

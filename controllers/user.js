@@ -77,7 +77,7 @@ module.exports.updateUser = (req, res) => {
       handleError(error, res, {
         notFoundMessage: `Пользователь с ID ${userId} не найден`,
         badRequestMessage: `Пользователь с ID ${userId} не валиден`,
-        invalidRequestMessage: 'Переданные данные не валидны',
+        // invalidRequestMessage: 'Переданные данные не валидны',
       });
     });
 };
