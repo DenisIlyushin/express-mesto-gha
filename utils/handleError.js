@@ -14,14 +14,14 @@ const defaults = {
 module.exports.handleError = (
   error,
   res,
-  config
+  config,
 ) => {
-  // восстанавливает необходимую структуру объекта config
+  // установка необходимых сообщений
   const messages = {
     ...config,
     ...defaults,
   };
-  console.log(messages)
+
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
     res
       .status(StatusCodes.NOT_FOUND)
