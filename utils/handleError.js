@@ -14,12 +14,7 @@ const defaults = {
 module.exports.handleError = (
   error,
   res,
-  config = {
-    notFoundMessage: '',
-    badRequestMessage: '',
-    invalidRequestMessage: '',
-    defaultMessage: '',
-  },
+  config
 ) => {
   // восстанавливает необходимую структуру объекта config
   const messages = {
