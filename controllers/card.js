@@ -32,22 +32,24 @@ module.exports.getAllCards = (req, res) => {
     });
 };
 
-module.exports.getCard = (req, res) => {
-  const cardId = req.params.id;
-  Card.findById(cardId)
-    .orFail()
-    .then((user) => {
-      res
-        .status(StatusCodes.OK)
-        .send(user);
-    })
-    .catch((error) => {
-      handleError(error, res, {
-        notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
-        badRequestMessage: `Карточка места с с ID ${cardId} не валиднa`,
-      });
-    });
-};
+// Обработка GET запроса для поиска единичной карточки
+//
+// module.exports.getCard = (req, res) => {
+//   const cardId = req.params.id;
+//   Card.findById(cardId)
+//     .orFail()
+//     .then((user) => {
+//       res
+//         .status(StatusCodes.OK)
+//         .send(user);
+//     })
+//     .catch((error) => {
+//       handleError(error, res, {
+//         notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
+//         badRequestMessage: `Карточка места с с ID ${cardId} не валиднa`,
+//       });
+//     });
+// };
 
 module.exports.handleLike = (req, res) => {
   const cardId = req.params.id;
