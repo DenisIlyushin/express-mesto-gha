@@ -18,10 +18,10 @@ module.exports.handleError = (
 ) => {
   // восстанавливает необходимую структуру объекта config
   const messages = {
-    defaults,
     ...config,
+    ...defaults,
   };
-
+  console.log(messages)
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
     res
       .status(StatusCodes.NOT_FOUND)
