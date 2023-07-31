@@ -18,8 +18,8 @@ module.exports.handleError = (
 ) => {
   // установка необходимых сообщений
   const messages = {
-    ...config,
     ...defaults,
+    ...config,
   };
 
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
