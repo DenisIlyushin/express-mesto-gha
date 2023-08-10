@@ -28,9 +28,7 @@ const userSchema = new mongoose.Schema({
           require_protocol: true,
         },
       ),
-      message: ({ value }) => (
-        `${value} - некоректный URL. Ожидается http(s)://(www).site.com`
-      ),
+      message: () => 'Некоректный URL',
     },
   },
   email: {
@@ -41,9 +39,7 @@ const userSchema = new mongoose.Schema({
       validator: (value) => (
         validator.isEmail(value)
       ),
-      message: ({ value }) => (
-        `${value} - некоректный email адрес`
-      ),
+      message: () => 'Некоректный email адрес',
     },
   },
   password: {
