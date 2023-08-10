@@ -12,6 +12,7 @@ const { login,
 const {
   PORT = 3000,
   BASE_PATH = 'http://localhost',
+  //                       ! локальная ошибка на рабочем ноуте
   MONGODB_URL = 'mongodb://0.0.0.0:27017/mestodb',
 } = process.env;
 
