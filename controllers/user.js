@@ -1,16 +1,33 @@
 const {
   StatusCodes,
 } = require('http-status-codes');
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 const { handleError } = require('../utils/handleError');
 
 module.exports.createUser = (req, res) => {
-  User.create(req.body)
+  const {
+    email, name, about, avatar,
+  } = req.body;
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => User.create({
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
+    }))
     .then((user) => {
       res
         .status(StatusCodes.CREATED)
-        .send(user);
+        .send({
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        });
     })
     .catch((error) => {
       handleError(error, res, {

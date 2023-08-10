@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
-
 const {
   StatusCodes,
 } = require('http-status-codes');
+
+const UnauthorizedError = require('../errors/unauthorizedError');
 
 const defaults = {
   notFoundMessage: 'Объект не найден',
   badRequestMessage: 'ID объекта не валидный',
   invalidRequestMessage: 'Переданные данные не валидны',
   defaultMessage: 'Непредвиденная ошибка сервера',
+  unauthorizedMessage: 'Доступ запрещен',
 };
 
 module.exports.handleError = (
@@ -18,8 +20,8 @@ module.exports.handleError = (
 ) => {
   // установка необходимых сообщений
   const messages = {
-    ...config,
     ...defaults,
+    ...config,
   };
 
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
@@ -43,11 +45,18 @@ module.exports.handleError = (
         message: messages.invalidRequestMessage,
         details: error.message ? error.message : '',
       });
+  } else if (error instanceof UnauthorizedError) {
+    res
+      .status(StatusCodes.UNAUTHORIZED)
+      .send({
+        message: messages.invalidRequestMessage,
+        details: error.message ? error.message : '',
+      });
   } else {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send({
-        message: messages.defaultMessage,
+        message: messages.unauthorizedMessage,
         details: error.message ? error.message : '',
       });
   }
