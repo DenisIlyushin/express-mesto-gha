@@ -8,7 +8,7 @@ const cardRouter = require('./routes/cardRoutes');
 
 const {
   PORT = 3000,
-  // BASE_PATH = 'http://localhost',
+  BASE_PATH = 'http://localhost',
   MONGODB_URL = 'mongodb://localhost:27017/mestodb',
 } = process.env;
 
@@ -39,6 +39,8 @@ app.use('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  // console.log('Ссылка на сервер');
-  // console.log(`${BASE_PATH}:${PORT}`);
+  // eslint-disable-next-line no-console
+  console.log('Ссылка на сервер');
+  // eslint-disable-next-line no-console
+  console.log(`${BASE_PATH}:${PORT}`);
 });
