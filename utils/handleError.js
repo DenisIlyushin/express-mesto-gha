@@ -49,14 +49,14 @@ module.exports.handleError = (
     res
       .status(StatusCodes.UNAUTHORIZED)
       .send({
-        message: messages.invalidRequestMessage,
+        message: messages.unauthorizedMessage,
         details: error.message ? error.message : '',
       });
   } else {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send({
-        message: messages.unauthorizedMessage,
+        message: messages.defaultMessage,
         details: error.message ? error.message : '',
       });
   }

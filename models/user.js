@@ -53,20 +53,19 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function findOne(email, password) {
+userSchema.statics.findUserByCreds = function findOne(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new UnauthorizedError(
-          'Несуществующий пользователь или неверный пароль',
+          'Пользователь не найден или данные не верны',
         ));
       }
-
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
             return Promise.reject(new UnauthorizedError(
-              'Несуществующий пользователь или неверный пароль',
+              'Пользователь не найден или данные не верны',
             ));
           }
           return user;

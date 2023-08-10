@@ -2,15 +2,19 @@ const {
   StatusCodes,
 } = require('http-status-codes');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const { handleError } = require('../utils/handleError');
+const UnauthorizedError = require('../errors/unauthorizedError');
+
+const { JWT_SECRET = 'b1gSecret' } = process.env;
 
 module.exports.createUser = (req, res) => {
   const {
-    email, name, about, avatar,
+    email, name, about, avatar, password,
   } = req.body;
-  bcrypt.hash(req.body.password, 10)
+  bcrypt.hash(password, 10)
     .then((hash) => User.create({
       email,
       password: hash,
@@ -32,6 +36,28 @@ module.exports.createUser = (req, res) => {
     .catch((error) => {
       handleError(error, res, {
         invalidRequestMessage: 'Не удалось создать пользователя. Данные не валидны',
+      });
+    });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  return User.findUserByCreds(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        JWT_SECRET,
+        { expiresIn: '7d' },
+      );
+      // res.cookie('JWT', JSON.stringify({ token }), {
+      //   secure: false,
+      //   httpOnly: true,
+      // });
+      res.send({ token });
+    })
+    .catch((error) => {
+      handleError(error, res, {
+        unauthorizedMessage: 'Невозможно предоставить токен для пользователя',
       });
     });
 };

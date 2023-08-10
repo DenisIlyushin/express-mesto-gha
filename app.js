@@ -5,11 +5,14 @@ const { StatusCodes } = require('http-status-codes');
 
 const userRouter = require('./routes/userRoutes');
 const cardRouter = require('./routes/cardRoutes');
+const { login,
+  createUser
+} = require('./controllers/user');
 
 const {
   PORT = 3000,
   BASE_PATH = 'http://localhost',
-  MONGODB_URL = 'mongodb://localhost:27017/mestodb',
+  MONGODB_URL = 'mongodb://0.0.0.0:27017/mestodb',
 } = process.env;
 
 mongoose.connect(MONGODB_URL, {
@@ -28,6 +31,9 @@ app.use((req, res, next) => {
 });
 
 // routers
+// todo create auth router?
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', (req, res) => {
