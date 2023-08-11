@@ -5,8 +5,9 @@ const { StatusCodes } = require('http-status-codes');
 
 const userRouter = require('./routes/userRoutes');
 const cardRouter = require('./routes/cardRoutes');
-const { login,
-  createUser
+const {
+  login,
+  createUser,
 } = require('./controllers/user');
 
 const {
