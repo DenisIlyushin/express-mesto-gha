@@ -8,6 +8,7 @@ const UnknownError = require('../errors/unknownError');
 const defaults = {
   notFoundMessage: 'Объект не найден',
   badRequestMessage: 'ID объекта не валидный',
+  isDuplicatedMessage: 'Такой объект уже существует',
   invalidRequestMessage: 'Переданные данные не валидны',
   unauthorizedMessage: 'Доступ запрещен',
   defaultMessage: 'Непредвиденная ошибка сервера',
@@ -25,6 +26,8 @@ module.exports.handleRequestErrors = (
   };
   if (error instanceof mongoose.Error.DocumentNotFoundError) {
     next(new NotFoundError(messages.notFoundMessage, error.message));
+  } else if (error.code === 11000) {
+    next(new BadRequestError(messages.isDuplicatedMessage, error.message));
   } else if (error instanceof mongoose.Error.CastError) {
     next(new BadRequestError(messages.badRequestMessage, error.message));
   } else if (error instanceof mongoose.Error.ValidationError) {
