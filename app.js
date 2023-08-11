@@ -10,8 +10,8 @@ const {
   createUser,
 } = require('./controllers/user');
 const {
-  returnResponseError,
-} = require('./utils/returnResponseError');
+  returnErrorAsResponse,
+} = require('./utils/returnErrorAsResponse');
 
 const {
   PORT = 3000,
@@ -49,8 +49,9 @@ app.use('*', (req, res) => {
     });
 });
 // итоговая обработка ошибки
+// eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
-  returnResponseError(error, res, {});
+  returnErrorAsResponse(error, res, {});
 });
 
 app.listen(PORT, () => {

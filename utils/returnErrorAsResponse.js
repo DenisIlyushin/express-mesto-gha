@@ -1,4 +1,4 @@
-module.exports.returnResponseError = (
+module.exports.returnErrorAsResponse = (
   error,
   res,
 ) => {
