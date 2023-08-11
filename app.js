@@ -9,6 +9,9 @@ const {
   login,
   createUser,
 } = require('./controllers/user');
+const {
+  returnResponseError,
+} = require('./utils/returnResponseError');
 
 const {
   PORT = 3000,
@@ -44,6 +47,10 @@ app.use('*', (req, res) => {
     .send({
       message: 'URI не найден.',
     });
+});
+// итоговая обработка ошибки
+app.use((error, req, res, next) => {
+  returnResponseError(error, res, {});
 });
 
 app.listen(PORT, () => {

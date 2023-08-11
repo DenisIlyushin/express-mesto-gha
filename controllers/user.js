@@ -5,12 +5,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
-const { handleError } = require('../utils/handleError');
-const UnauthorizedError = require('../errors/unauthorizedError');
+const { handleRequestErrors } = require('../utils/handleRequestErrors');
 
 const { JWT_SECRET = 'b1gSecret' } = process.env;
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     email, name, about, avatar, password,
   } = req.body;
@@ -34,13 +33,17 @@ module.exports.createUser = (req, res) => {
         });
     })
     .catch((error) => {
-      handleError(error, res, {
-        invalidRequestMessage: 'Не удалось создать пользователя. Данные не валидны',
-      });
+      handleRequestErrors(
+        error,
+        next,
+        {
+          invalidRequestMessage: 'Не удалось создать пользователя. Данные не валидны',
+        },
+      );
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCreds(email, password)
     .then((user) => {
@@ -56,23 +59,27 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((error) => {
-      handleError(error, res, {
-        unauthorizedMessage: 'Невозможно предоставить токен для пользователя',
-      });
+      handleRequestErrors(
+        error,
+        next,
+        {
+          unauthorizedMessage: 'Невозможно предоставить токен для пользователя',
+        },
+      );
     });
 };
 
-module.exports.getAllUsers = (req, res) => {
+module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((result) => {
       res.status(StatusCodes.OK).send(result);
     })
     .catch((error) => {
-      handleError(error, res);
+      handleRequestErrors(error, next);
     });
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   const userId = req.params.id;
   User.findById(userId)
     .orFail()
@@ -82,14 +89,39 @@ module.exports.getUser = (req, res) => {
         .send(user);
     })
     .catch((error) => {
-      handleError(error, res, {
-        notFoundMessage: `Пользователь с ID ${userId} не найден`,
-        badRequestMessage: `Пользователь с ID ${userId} не валиден`,
-      });
+      handleRequestErrors(
+        error,
+        next,
+        {
+          notFoundMessage: `Пользователь с ID ${userId} не найден`,
+          badRequestMessage: `Пользователь с ID ${userId} не валиден`,
+        },
+      );
     });
 };
 
-module.exports.updateUser = (req, res) => {
+module.exports.getCurrentUser = (req, res, next) => {
+  const userId = req.user._id;
+  User.findById(userId)
+    .orFail()
+    .then((user) => {
+      res
+        .status(StatusCodes.OK)
+        .send(user);
+    })
+    .catch((error) => {
+      handleRequestErrors(
+        error,
+        next,
+        {
+          notFoundMessage: `Пользователь с ID ${userId} не найден`,
+          badRequestMessage: `Пользователь с ID ${userId} не валиден`,
+        },
+      );
+    });
+};
+
+module.exports.updateUser = (req, res, next) => {
   const userId = req.user._id;
 
   // проверка обновляемых параметров по пути запроса
@@ -115,10 +147,13 @@ module.exports.updateUser = (req, res) => {
         .send(user);
     })
     .catch((error) => {
-      handleError(error, res, {
-        notFoundMessage: `Пользователь с ID ${userId} не найден`,
-        badRequestMessage: `Пользователь с ID ${userId} не валиден`,
-        // invalidRequestMessage: 'Переданные данные не валидны',
-      });
+      handleRequestErrors(
+        error,
+        next,
+        {
+          notFoundMessage: `Пользователь с ID ${userId} не найден`,
+          badRequestMessage: `Пользователь с ID ${userId} не валиден`,
+        },
+      );
     });
 };

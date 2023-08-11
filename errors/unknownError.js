@@ -4,11 +4,11 @@ const {
 
 const ExtendedError = require('./extendedError');
 
-class UnauthorizedError extends ExtendedError {
+class UnknownError extends ExtendedError {
   constructor(message, details = null) {
     super(message, details);
-    this.statusCode = StatusCodes.UNAUTHORIZED;
+    this.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
   }
 }
 
-module.exports = UnauthorizedError;
+module.exports = UnknownError;
