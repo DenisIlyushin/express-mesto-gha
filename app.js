@@ -1,15 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const cardRouter = require('./routes/cardRoutes');
-const {
-  login,
-  createUser,
-} = require('./controllers/user');
-const {
-  returnErrorAsResponse,
-} = require('./errors/returnErrorAsResponse');
+const { returnErrorAsResponse } = require('./errors/returnErrorAsResponse');
 const NotFoundError = require('./errors/classes/notFoundError');
 
 const {
@@ -28,9 +23,7 @@ const app = express();
 app.use(express.json());
 
 // routers
-// todo create auth router?
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.use('/', authRouter);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', (req, res, next) => {
