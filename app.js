@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -30,6 +31,7 @@ app.use('*', (req, res, next) => {
   next(new NotFoundError('URI не найден'));
 });
 // итоговая обработка ошибки
+app.use(errors());
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
   returnErrorAsResponse(error, res, {});

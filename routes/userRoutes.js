@@ -1,3 +1,4 @@
+const { celebrate, Joi } = require('celebrate');
 const userRouter = require('express').Router();
 
 const auth = require('../middleware/auth');
@@ -7,15 +8,56 @@ const {
   getCurrentUser,
   updateUser,
 } = require('../controllers/user');
+const {
+  validateMongoID,
+  validateShortString,
+  validateRequiredUrl,
+} = require('../utils/validators');
 
 const {
   USER_PATH = '/users',
 } = process.env;
 
-userRouter.get(`${USER_PATH}`, auth, getAllUsers);
-userRouter.get(`${USER_PATH}/me`, auth, getCurrentUser);
-userRouter.get(`${USER_PATH}/:id`, auth, getUser);
-userRouter.patch(`${USER_PATH}/me`, auth, updateUser);
-userRouter.patch(`${USER_PATH}/me/avatar`, auth, updateUser);
+userRouter.get(
+  `${USER_PATH}`,
+  auth,
+  getAllUsers,
+);
+userRouter.get(
+  `${USER_PATH}/me`,
+  auth,
+  getCurrentUser,
+);
+userRouter.get(
+  `${USER_PATH}/:id`,
+  auth,
+  celebrate({
+    params: Joi.object().keys({
+      id: validateMongoID(),
+    }),
+  }),
+  getUser,
+);
+userRouter.patch(
+  `${USER_PATH}/me`,
+  auth,
+  celebrate({
+    body: Joi.object().keys({
+      name: validateShortString(),
+      about: validateShortString(),
+    }),
+  }),
+  updateUser,
+);
+userRouter.patch(
+  `${USER_PATH}/me/avatar`,
+  auth,
+  celebrate({
+    body: Joi.object().keys({
+      avatar: validateRequiredUrl(),
+    }),
+  }),
+  updateUser,
+);
 
 module.exports = userRouter;
