@@ -26,7 +26,7 @@ mongoose.connect(MONGODB_URL, {
 const app = express();
 
 // middlewares
-app.use(bodyParser.json());
+app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
     _id: '64c3bfb7df7e40ff39b8d5ab',
