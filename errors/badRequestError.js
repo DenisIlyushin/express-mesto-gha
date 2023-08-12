@@ -2,9 +2,9 @@ const {
   StatusCodes,
 } = require('http-status-codes');
 
-const ExtendedError = require('./extendedError');
+const UnknownError = require('./unknownError.js');
 
-class BadRequestError extends ExtendedError {
+class BadRequestError extends UnknownError {
   constructor(message, details = null) {
     super(message, details);
     this.statusCode = StatusCodes.BAD_REQUEST;

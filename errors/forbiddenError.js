@@ -4,11 +4,11 @@ const {
 
 const UnknownError = require('./unknownError.js');
 
-class NotFoundError extends UnknownError {
+class ForbiddenError extends UnknownError {
   constructor(message, details = null) {
     super(message, details);
-    this.statusCode = StatusCodes.NOT_FOUND;
+    this.statusCode = StatusCodes.FORBIDDEN;
   }
 }
 
-module.exports = NotFoundError;
+module.exports =ForbiddenError;

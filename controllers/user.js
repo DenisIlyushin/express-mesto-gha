@@ -38,7 +38,7 @@ module.exports.createUser = (req, res, next) => {
         next,
         {
           invalidRequestMessage: 'Не удалось создать пользователя. Данные не валидны',
-          isDuplicatedMessage: 'Пользователь с таким email уже зарегистрирован',
+          conflictMessage: 'Пользователь с таким email уже зарегистрирован',
         },
       );
     });

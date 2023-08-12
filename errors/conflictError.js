@@ -4,11 +4,11 @@ const {
 
 const UnknownError = require('./unknownError.js');
 
-class NotFoundError extends UnknownError {
+class ConflictError extends UnknownError {
   constructor(message, details = null) {
     super(message, details);
-    this.statusCode = StatusCodes.NOT_FOUND;
+    this.statusCode = StatusCodes.CONFLICT;
   }
 }
 
-module.exports = NotFoundError;
+module.exports = ConflictError;

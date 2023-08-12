@@ -4,16 +4,17 @@ const {
 
 const Card = require('../models/card');
 const { handleRequestErrors } = require('../utils/handleRequestErrors');
+const ForbiddenError = require('../errors/forbiddenError.js');
 
 module.exports.createCard = (req, res, next) => {
   Card.create({
     ...req.body,
     owner: req.user._id,
   })
-    .then((user) => {
+    .then((card) => {
       res
         .status(StatusCodes.CREATED)
-        .send(user);
+        .send(card);
     })
     .catch((error) => {
       handleRequestErrors(
@@ -28,8 +29,8 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.getAllCards = (req, res, next) => {
   Card.find({})
-    .then((result) => {
-      res.status(StatusCodes.OK).send(result);
+    .then((card) => {
+      res.status(StatusCodes.OK).send(card);
     })
     .catch((error) => {
       handleRequestErrors(error, next);
@@ -58,10 +59,10 @@ module.exports.handleLike = (req, res, next) => {
   )
     .orFail()
     .populate([{ path: 'likes', model: 'user' }])
-    .then((user) => {
+    .then((card) => {
       res
         .status(StatusCodes.OK)
-        .send(user);
+        .send(card);
     })
     .catch((error) => {
       handleRequestErrors(
@@ -77,12 +78,30 @@ module.exports.handleLike = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   const cardId = req.params.id;
-  Card.findByIdAndRemove(cardId)
+
+  Card.findById(cardId)
     .orFail()
-    .then((user) => {
-      res
-        .status(StatusCodes.OK)
-        .send(user);
+    .then((card) => {
+      if (req.user._id !== card.owner.toString()) {
+        return Promise.reject(new ForbiddenError('Нельзя удалять чужие карточки'))
+      }
+      Card.findByIdAndRemove(card._id)
+        .orFail()
+        .then((card) => {
+          res
+            .status(StatusCodes.OK)
+            .send(card);
+        })
+        .catch((error) => {
+          handleRequestErrors(
+            error,
+            next,
+            {
+              notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
+              badRequestMessage: `Карточка места с с ID ${cardId} не валиднa`,
+            },
+          );
+        });
     })
     .catch((error) => {
       handleRequestErrors(

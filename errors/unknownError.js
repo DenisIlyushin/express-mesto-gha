@@ -2,11 +2,10 @@ const {
   StatusCodes,
 } = require('http-status-codes');
 
-const ExtendedError = require('./extendedError');
-
-class UnknownError extends ExtendedError {
+class UnknownError extends Error {
   constructor(message, details = null) {
-    super(message, details);
+    super(message);
+    this.details = details || 'Без дополнительных сведений';
     this.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
   }
 }
