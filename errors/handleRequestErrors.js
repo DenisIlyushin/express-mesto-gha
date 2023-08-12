@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const NotFoundError = require('./classes/notFoundError.js');
-const ConflictError = require('./classes/conflictError.js');
-const BadRequestError = require('./classes/badRequestError.js');
-const UnauthorizedError = require('./classes/unauthorizedError.js');
-const ForbiddenError = require('./classes/forbiddenError.js');
-const UnknownError = require('./classes/unknownError.js');
+const NotFoundError = require('./classes/notFoundError');
+const ConflictError = require('./classes/conflictError');
+const BadRequestError = require('./classes/badRequestError');
+const UnauthorizedError = require('./classes/unauthorizedError');
+const ForbiddenError = require('./classes/forbiddenError');
+const UnknownError = require('./classes/unknownError');
 
 const defaults = {
   notFoundMessage: 'Объект не найден',

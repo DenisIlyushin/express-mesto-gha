@@ -4,8 +4,7 @@ const {
 
 const Card = require('../models/card');
 const { handleRequestErrors } = require('../errors/handleRequestErrors');
-const ForbiddenError = require('../errors/classes/forbiddenError.js');
-
+const ForbiddenError = require('../errors/classes/forbiddenError');
 
 module.exports.createCard = (req, res, next) => {
   Card.create({
@@ -84,14 +83,14 @@ module.exports.deleteCard = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (req.user._id !== card.owner.toString()) {
-        return Promise.reject(new ForbiddenError('Нельзя удалять чужие карточки'))
+        return Promise.reject(new ForbiddenError('Нельзя удалять чужие карточки'));
       }
       Card.findByIdAndRemove(card._id)
         .orFail()
-        .then((card) => {
+        .then((deletedCard) => {
           res
             .status(StatusCodes.OK)
-            .send(card);
+            .send(deletedCard);
         })
         .catch((error) => {
           handleRequestErrors(
@@ -103,6 +102,7 @@ module.exports.deleteCard = (req, res, next) => {
             },
           );
         });
+      return Promise.resolve();
     })
     .catch((error) => {
       handleRequestErrors(

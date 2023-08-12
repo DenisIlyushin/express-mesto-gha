@@ -2,7 +2,7 @@ const {
   StatusCodes,
 } = require('http-status-codes');
 
-const UnknownError = require('./unknownError.js');
+const UnknownError = require('./unknownError');
 
 class ConflictError extends UnknownError {
   constructor(message, details = null) {

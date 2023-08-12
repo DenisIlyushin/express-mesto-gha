@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { StatusCodes } = require('http-status-codes');
 
 const userRouter = require('./routes/userRoutes');
 const cardRouter = require('./routes/cardRoutes');
@@ -11,6 +10,7 @@ const {
 const {
   returnErrorAsResponse,
 } = require('./errors/returnErrorAsResponse');
+const NotFoundError = require('./errors/classes/notFoundError');
 
 const {
   PORT = 3000,
@@ -34,11 +34,7 @@ app.post('/signup', createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 app.use('*', (req, res, next) => {
-  res
-    .status(StatusCodes.NOT_FOUND)
-    .send({
-      message: 'URI не найден.',
-    });
+  next(new NotFoundError('URI не найден'));
 });
 // итоговая обработка ошибки
 // eslint-disable-next-line no-unused-vars
