@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const { StatusCodes } = require('http-status-codes');
 
 const userRouter = require('./routes/userRoutes');
