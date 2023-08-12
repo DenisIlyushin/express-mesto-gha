@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const UnauthorizedError = require('../errors/unauthorizedError');
-const NotFoundError = require('../errors/notFoundError');
-const BadRequestError = require('../errors/badRequestError');
-const UnknownError = require('../errors/unknownError');
-const ForbiddenError = require('../errors/forbiddenError.js');
-const ConflictError = require('../errors/conflictError.js');
+const NotFoundError = require('./classes/notFoundError.js');
+const ConflictError = require('./classes/conflictError.js');
+const BadRequestError = require('./classes/badRequestError.js');
+const UnauthorizedError = require('./classes/unauthorizedError.js');
+const ForbiddenError = require('./classes/forbiddenError.js');
+const UnknownError = require('./classes/unknownError.js');
 
 const defaults = {
   notFoundMessage: 'Объект не найден',
@@ -32,7 +32,7 @@ module.exports.handleRequestErrors = (
   } else if (error.code === 11000) {
     next(new ConflictError(messages.conflictMessage, error.message));
   } else if (error instanceof mongoose.Error.CastError) {
-    next(new BadRequestError(messages.conflictError, error.message));
+    next(new BadRequestError(messages.badRequestMessage, error.message));
   } else if (error instanceof mongoose.Error.ValidationError) {
     next(new BadRequestError(messages.invalidRequestMessage, error.message));
   } else if (error instanceof UnauthorizedError) {

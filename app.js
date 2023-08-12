@@ -10,7 +10,7 @@ const {
 } = require('./controllers/user');
 const {
   returnErrorAsResponse,
-} = require('./utils/returnErrorAsResponse');
+} = require('./errors/returnErrorAsResponse');
 
 const {
   PORT = 3000,
@@ -26,12 +26,6 @@ const app = express();
 
 // middlewares
 app.use(express.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64c3bfb7df7e40ff39b8d5ab',
-  };
-  next();
-});
 
 // routers
 // todo create auth router?
@@ -39,7 +33,7 @@ app.post('/signin', login);
 app.post('/signup', createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
-app.use('*', (req, res) => {
+app.use('*', (req, res, next) => {
   res
     .status(StatusCodes.NOT_FOUND)
     .send({

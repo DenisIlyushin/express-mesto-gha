@@ -3,8 +3,9 @@ const {
 } = require('http-status-codes');
 
 const Card = require('../models/card');
-const { handleRequestErrors } = require('../utils/handleRequestErrors');
-const ForbiddenError = require('../errors/forbiddenError.js');
+const { handleRequestErrors } = require('../errors/handleRequestErrors');
+const ForbiddenError = require('../errors/classes/forbiddenError.js');
+
 
 module.exports.createCard = (req, res, next) => {
   Card.create({
