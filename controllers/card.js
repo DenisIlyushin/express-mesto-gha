@@ -21,7 +21,7 @@ module.exports.createCard = (req, res, next) => {
         error,
         next,
         {
-          invalidRequestMessage: 'Не удалось создать карточку места. Данные не валидны',
+          invalidRequestMessage: 'Не удалось создать карточку места',
         },
       );
     });
@@ -83,26 +83,16 @@ module.exports.deleteCard = (req, res, next) => {
     .orFail()
     .then((card) => {
       if (req.user._id !== card.owner.toString()) {
-        return Promise.reject(new ForbiddenError('Нельзя удалять чужие карточки'));
+        return Promise.reject(
+          new ForbiddenError('Нельзя удалять чужие карточки'),
+        );
       }
-      Card.findByIdAndRemove(card._id)
-        .orFail()
+      return Card.findByIdAndRemove(card._id)
         .then((deletedCard) => {
           res
             .status(StatusCodes.OK)
             .send(deletedCard);
-        })
-        .catch((error) => {
-          handleRequestErrors(
-            error,
-            next,
-            {
-              notFoundMessage: `Карточка места с ID ${cardId} не найдена`,
-              badRequestMessage: `Карточка места с с ID ${cardId} не валиднa`,
-            },
-          );
         });
-      return Promise.resolve();
     })
     .catch((error) => {
       handleRequestErrors(
