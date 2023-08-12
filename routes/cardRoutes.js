@@ -9,8 +9,8 @@ const {
   deleteCard,
 } = require('../controllers/card');
 const {
-  validateShortString,
-  validateUrl,
+  validateRequiredShortString,
+  validateRequiredUrl,
   validateMongoID,
 } = require('../utils/validators');
 
@@ -23,8 +23,8 @@ cardRouter.post(
   auth,
   celebrate({
     body: Joi.object().keys({
-      name: validateShortString(),
-      link: validateUrl(),
+      name: validateRequiredShortString(),
+      link: validateRequiredUrl(),
     }),
   }),
   createCard,
