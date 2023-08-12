@@ -2,6 +2,9 @@ const {
   StatusCodes,
 } = require('http-status-codes');
 
+/**
+ * Базовый тип ошибки, от него наследуются остальные.
+ */
 class UnknownError extends Error {
   constructor(message, details = null) {
     super(message);
