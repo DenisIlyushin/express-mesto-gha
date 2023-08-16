@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.findUserByCreds = function findOne(email, password) {
-  return this.findOne({ email }).select('+password')
+  this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new UnauthorizedError(
