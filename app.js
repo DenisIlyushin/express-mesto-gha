@@ -8,6 +8,7 @@ const cardRouter = require('./routes/cardRoutes');
 const { returnErrorAsResponse } = require('./errors/returnErrorAsResponse');
 const NotFoundError = require('./errors/classes/notFoundError');
 const { requestLogger, errorLogger } = require('./middleware/logger');
+const cors = require('./middleware/cors');
 
 const {
   PORT = 3000,
@@ -23,6 +24,7 @@ const app = express();
 
 // middlewares
 app.use(express.json());
+app.use(cors);
 // логгирование запроса
 app.use(requestLogger);
 // routers
