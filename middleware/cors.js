@@ -1,11 +1,12 @@
+// TODO было бы не плохо получать адрес из .env
+
+const { NODE_ENV = 'dev' } = process.env;
 const allowedCors = [
   'http://ilyushindenis-15-front.nomoredomainsicu.ru',
   'https://ilyushindenis-15-front.nomoredomainsicu.ru',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
-
-const { NODE_ENV = 'dev' } = process.env;
 
 // в режиме разработки резрешается обращаться к серверу с любого сервиса
 if (NODE_ENV === 'dev') {
