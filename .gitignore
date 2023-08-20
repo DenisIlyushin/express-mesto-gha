@@ -31,6 +31,7 @@ yarn-error.log*
 .env.production.local
 
 # dev
+*.log
 /dist
 /.junk
 /reminder.txt

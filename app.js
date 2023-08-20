@@ -7,6 +7,7 @@ const userRouter = require('./routes/userRoutes');
 const cardRouter = require('./routes/cardRoutes');
 const { returnErrorAsResponse } = require('./errors/returnErrorAsResponse');
 const NotFoundError = require('./errors/classes/notFoundError');
+const { requestLogger, errorLogger } = require('./middleware/logger');
 
 const {
   PORT = 3000,
@@ -22,7 +23,8 @@ const app = express();
 
 // middlewares
 app.use(express.json());
-
+// логгирование запроса
+app.use(requestLogger);
 // routers
 app.use('/', authRouter);
 app.use('/', userRouter);
@@ -30,6 +32,8 @@ app.use('/', cardRouter);
 app.use('*', (req, res, next) => {
   next(new NotFoundError('URI не найден'));
 });
+// логгирование ошибки
+app.use(errorLogger);
 // итоговая обработка ошибки
 app.use(errors());
 // eslint-disable-next-line no-unused-vars
