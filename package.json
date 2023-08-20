@@ -13,6 +13,7 @@
   "license": "ISC",
   "scripts": {
     "lint": "npx eslint .",
+    "fix": "npx eslint ./ --fix",
     "dev": "nodemon app.js",
     "start": "node app.js",
     "test": "jest"
